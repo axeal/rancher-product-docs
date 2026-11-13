@@ -187,7 +187,7 @@ If the CA certificate used by the Rancher server changes, the `CATTLE_CA_CHECKSU
 +
 [,bash]
 ----
-curl -k -s -fL <RANCHER_SERVER_URL>/v3/settings/cacerts | jq -r .value | sha256sum | awk '{print $1}'
+curl -k -s -fL <RANCHER_SERVER_URL>/v3/settings/cacerts | awk -F'"value":"' '{split($2,a,"\""); gsub(/\\n/,"\n",a[1]); print a[1]}' | sha256sum | awk '{print $1}'
 ----
 
 . Update the `CATTLE_CA_CHECKSUM` environment variable for the cattle-cluster-agent deployment in the downstream cluster with the new checksum value. Replace `<CHECKSUM_VALUE>` with the value generated in the previous step.
